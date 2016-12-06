@@ -1,16 +1,40 @@
-#!/bin/bash
+#!/usr/bin/python
+import select
+import struct
+import time
+import sys
+import os
 
-# Determines whether or not to shut down LS-WVL
-# based on the switch values
+infile_path = "/dev/input/event0"
 
-SW_POWER=/sys/class/gpio/gpio46/value
-SW_PAUTO=/sys/class/gpio/gpio47/value
-INTERVAL=5
+#long int, long int, unsigned short, unsigned short, unsigned int
+FORMAT = 'llHHI'
+EVENT_SIZE = struct.calcsize(FORMAT)
 
-# when switched on they cannot both be equal
-while [ $(cat $SW_POWER) -ne $(cat $SW_PAUTO) ]; do
-    sleep $INTERVAL
-done
+#open file in binary mode
+in_file = open(infile_path, "rb")
 
-# when switched off
-shutdown -h now
+event = in_file.read(EVENT_SIZE)
+want_shutdown = False
+while event:
+    (tv_sec, tv_usec, type, code, value) = struct.unpack(FORMAT, event)
+
+    if type != 0 or code != 0 or value != 0:
+        print("Event type %u, code %u, value %u at %d.%d" % \
+            (type, code, value, tv_sec, tv_usec))
+        if type == 5 and code == 0 and value == 0:
+            want_shutdown = True
+        else:
+            want_shutdown = False
+    else:
+        # Events with code, type and value == 0 are "separator" events
+        print("===========================================")
+
+    if want_shutdown:
+        r, w, e = select.select([ in_file ], [], [], 0.5)
+        if in_file not in r:
+             print("Shutdown now\n")
+             os.system('shutdown -h now')
+    event = in_file.read(EVENT_SIZE)
+
+in_file.close()

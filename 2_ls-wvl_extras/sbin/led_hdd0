@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shell script to control the internal red led by hdd0
-PIN=/sys/class/gpio/gpio34/value
+PIN=/sys/devices/gpio_leds/leds/linkstation\:red\:hdderr0/brightness
 
 case $1 in
     on)

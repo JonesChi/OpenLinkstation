@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # shell script to control the blue power led
-PIN=/sys/class/gpio/gpio40/value
+PIN=/sys/devices/gpio_leds/leds/linkstation\:blue\:power/brightness
 
 case $1 in
     on)
-        echo 0 > $PIN
+        echo 1 > $PIN
     ;;
     off)
-        echo 1 > $PIN
+        echo 0 > $PIN
     ;;
     state)
         if [ $(cat $PIN) -eq 0 ]; then

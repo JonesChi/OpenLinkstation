@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # shell script to control the red info led (alarm led)
-PIN=/sys/class/gpio/gpio36/value
+PIN=/sys/devices/gpio_leds/leds/linkstation\:red\:alarm/trigger
 
 case $1 in
     on)
-        echo 1 > $PIN
+        echo timer > $PIN
     ;;
     off)
-        echo 0 > $PIN
+        echo none > $PIN
     ;;
     state)
         if [ $(cat $PIN) -eq 0 ]; then

@@ -1,8 +1,5 @@
 #!/bin/sh
-# kFreeBSD do not accept scripts as interpreters, using #!/bin/sh and sourcing.
-if [ true != "$INIT_D_SCRIPT_SOURCED" ] ; then
-    set "$0" "$@"; INIT_D_SCRIPT_SOURCED=true . /lib/init/init-d-script
-fi
+
 ### BEGIN INIT INFO
 # Provides:          shutdown_monitor
 # Required-Start:    $remote_fs $syslog
@@ -21,16 +18,22 @@ fi
 # Author: David Slama <dslam127@gmail.com>
 # Date: 7 November 2015
 
+. /lib/lsb/init-functions
+
 DESC="Shutdown Switch Monitor"
 DAEMON=/usr/local/sbin/shutdown_daemon
 NAME=shutdown_daemon
 
 case $1 in
     start)
+        log_daemon_msg "Starting shutdown monitor" "shutdown_monitor" || true
         $DAEMON &
+        log_end_msg 0 || true
     ;;
     stop)
+        log_daemon_msg "Stopping shutdown monitor" "shutdown_monitor" || true
         pkill $NAME
+        log_end_msg 0 || true
     ;;
     restart)
         $0 stop

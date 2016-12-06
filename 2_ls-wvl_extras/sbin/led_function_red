@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shell script to control the red function led
-PIN=/sys/class/gpio/gpio37/value
+PIN=/sys/devices/gpio_leds/leds/linkstation\:red\:function/brightness
 
 case $1 in
     on)

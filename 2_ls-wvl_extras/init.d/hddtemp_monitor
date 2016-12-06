@@ -1,8 +1,5 @@
 #!/bin/sh
-# kFreeBSD do not accept scripts as interpreters, using #!/bin/sh and sourcing.
-if [ true != "$INIT_D_SCRIPT_SOURCED" ] ; then
-    set "$0" "$@"; INIT_D_SCRIPT_SOURCED=true . /lib/init/init-d-script
-fi
+
 ### BEGIN INIT INFO
 # Provides:          hdd_temperature_monitoring
 # Required-Start:    $remote_fs $syslog
@@ -21,16 +18,22 @@ fi
 # Author: David Slama <dslam127@gmail.com>
 # Date: 7 November 2015
 
+. /lib/lsb/init-functions
+
 DESC="HDD Temperature Monitor"
 DAEMON=/usr/local/sbin/hddtemp_daemon
 NAME=hddtemp_daemon
 
 case $1 in
     start)
+        log_daemon_msg "Starting HDD temperature monitoring" "hddtemp_daemon" || true
         $DAEMON &
+        log_end_msg 0 || true
     ;;
     stop)
+        log_daemon_msg "Stopping HDD temperature monitoring" "hddtemp_daemon" || true
         pkill $NAME
+        log_end_msg 0 || true
     ;;
     restart)
         $0 stop

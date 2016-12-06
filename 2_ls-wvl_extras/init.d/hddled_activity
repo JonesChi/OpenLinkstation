@@ -20,26 +20,30 @@
 # Credits:
 # This is not all my work, but I can't find the original source.
 
-LED_INFO=/sys/class/gpio/gpio38/value
+. /lib/lsb/init-functions
+
+LED_INFO=/sys/devices/gpio_leds/leds/linkstation\:amber\:info/brightness
 
 run_daemon()
 {       # this part is not my code only modified
+        log_daemon_msg "Starting HDD activity LED" "hdd_led_activity" || true
         iostat -z -d 1 sda | sed -u -e '1d' -e 's/Device.*/0/' -e 's/sd.*/1/' -e '/^$/d' > $LED_INFO &
+        log_end_msg 0 || true
 }
 
 kill_daemon()
 {
+        log_daemon_msg "Stopping HDD activity LED" "hdd_led_activity" || true
         pkill iostat
+        log_end_msg 0 || true
 }
 
 # Main loop
 case $1 in
         start)
-                echo "starting hdd led daemon."
                 run_daemon
                 ;;
         stop)
-                echo "stopping hdd led daemon."
                 kill_daemon
                 ;;
         restart|force-reload)

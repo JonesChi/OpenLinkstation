@@ -24,9 +24,6 @@ cp init.d/gpio_interface /etc/init.d/
 cp init.d/hddled_activity /etc/init.d/
 cp init.d/hddtemp_monitor /etc/init.d/
 cp init.d/shutdown_monitor /etc/init.d/
-cp sbin/button_function /usr/local/sbin/
-cp sbin/button_power /usr/local/sbin/
-cp sbin/button_power_auto /usr/local/sbin/
 cp sbin/fan_speed /usr/local/sbin/
 cp sbin/hddtemp_daemon /usr/local/sbin/
 cp sbin/led_alarm /usr/local/sbin/
@@ -44,9 +41,6 @@ chmod +x /etc/init.d/gpio_interface
 chmod +x /etc/init.d/hddled_activity
 chmod +x /etc/init.d/hddtemp_monitor
 chmod +x /etc/init.d/shutdown_monitor
-chmod +x /usr/local/sbin/button_function
-chmod +x /usr/local/sbin/button_power
-chmod +x /usr/local/sbin/button_power_auto
 chmod +x /usr/local/sbin/fan_speed
 chmod +x /usr/local/sbin/hddtemp_daemon
 chmod +x /usr/local/sbin/led_alarm
